@@ -12,21 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            Schema::create('users', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->string('email')->unique();
-                $table->string('password');
-                $table->enum('gender', ['Male', 'Female']);
-                $table->json('hobbies');
-                $table->string('instagram_username');
-                $table->string('phone_number');
-                $table->integer('coin')->default(100);
-                $table->string('profile_picture')->nullable();
-                $table->boolean('visibility')->default(true);
-                $table->rememberToken();
-                $table->timestamps();
-            });
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->enum('gender', ['Male', 'Female']);
+            $table->json('hobbies');
+            $table->string('instagram_username')->nullable();
+            $table->string('mobile_number');
+            $table->string('preferred_location');
+            $table->integer('registration_price');
+            // $table->unsignedBigInteger('wallet_balance')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
