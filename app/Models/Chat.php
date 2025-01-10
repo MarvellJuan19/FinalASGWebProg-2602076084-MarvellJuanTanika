@@ -4,31 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Chat extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
-    protected $guarded = ['id'];
-
-    public function user1()
+    public function sender()
     {
-        return $this->belongsTo(User::class, 'user_1_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function user2()
+    public function chatroom()
     {
-        return $this->belongsTo(User::class, 'user_2_id');
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'chats', 'id', 'id')
-            ->withPivot('user_1_id', 'user_2_id');
-    }
-
-    public function messages()
-    {
-        return $this->hasMany(ChatMessage::class);
+        return $this->belongsTo(Chatroom::class);
     }
 }

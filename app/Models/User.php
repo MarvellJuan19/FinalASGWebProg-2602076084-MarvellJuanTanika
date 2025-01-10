@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,9 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $guarded = [
-        'id'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,40 +43,19 @@ class User extends Authenticatable
         ];
     }
 
-    // Relasi untuk mendapatkan semua wishlist pengguna
-    public function wishlists()
+    public function friends()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Friend::class, 'sender_id')
+            ->where('status', 'Accepted')
+            ->orWhere(function ($query) {
+                $query->where('receiver_id', $this->id)
+                      ->where('status', 'Accepted');
+            });
     }
+    
 
-    // Relasi untuk mendapatkan pengguna yang dimasukkan ke wishlist pengguna ini
-    public function targetUsersInWishlist()
+    public function chats()
     {
-        return $this->hasMany(Wishlist::class, 'target_user_id');
-    }
-
-    public function followers()
-    {
-        return $this->hasMany(Following::class, 'followed_id');
-    }
-
-    public function followings()
-    {
-        return $this->hasMany(Following::class, 'follower_id');
-    }
-
-    public function senderChats()
-    {
-        return $this->hasMany(Chat::class, 'sender_id');
-    }
-
-    public function receiverChats()
-    {
-        return $this->hasMany(Chat::class, 'receiver_id');
-    }
-
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Chat::class);
     }
 }
